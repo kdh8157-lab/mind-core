@@ -94,7 +94,7 @@ export default function MainPlatform() {
 
   return (
     <div style={{ backgroundColor: '#FAF9F6', minHeight: '100vh', fontFamily: 'sans-serif', color: '#1E293B' }}>
-      {/* 헤더 */}
+      {/* 메인 상단 헤더 */}
       <header style={{ backgroundColor: '#FFFFFF', borderBottom: '1px solid #E2E8F0', padding: '16px 32px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <span style={{ fontSize: '24px' }}>🌿</span>
@@ -117,7 +117,7 @@ export default function MainPlatform() {
         </div>
       </header>
 
-      {/* 메인 히어로 배너 */}
+      {/* 히어로 비주얼 영역 */}
       <section style={{ backgroundColor: '#1E293B', color: '#FFF', padding: '60px 20px', textAlign: 'center' }}>
         <h2 style={{ fontSize: '28px', margin: '0 0 12px 0', fontWeight: 'bold' }}>지친 당신의 마음에 전하는 따뜻한 전문 상담</h2>
         <p style={{ margin: '0 auto', color: '#94A3B8', fontSize: '15px', maxWidth: '600px', lineHeight: '1.6' }}>
@@ -126,7 +126,7 @@ export default function MainPlatform() {
         </p>
       </section>
 
-      {/* 메인 컨텐츠 영역 */}
+      {/* 메인 서비스 콘텐츠 */}
       <main style={{ maxWidth: '960px', margin: '0 auto', padding: '30px 16px' }}>
         <div style={{ display: 'flex', gap: '16px', marginBottom: '24px', borderBottom: '2px solid #E2E8F0' }}>
           <button onClick={() => setCurrentTab('COUNSELORS')} style={{ padding: '12px 20px', border: 'none', background: 'none', fontSize: '16px', fontWeight: 'bold', cursor: 'pointer', borderBottom: currentTab === 'COUNSELORS' ? '3px solid #2D6A4F' : 'none', color: currentTab === 'COUNSELORS' ? '#2D6A4F' : '#94A3B8' }}>
