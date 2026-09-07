@@ -1,3 +1,5 @@
+import './globals.css'
+
 export const metadata = {
   title: '마인드케어',
   description: '지친 당신의 마음에 전하는 따뜻한 전문 심리상담',
