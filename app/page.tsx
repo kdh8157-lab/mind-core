@@ -81,6 +81,9 @@ export default function MainPlatform() {
   const [myStatus, setMyStatus] = useState<'ONLINE' | 'BUSY' | 'OFFLINE'>('ONLINE');
   const [applyForm, setApplyForm] = useState({ name: '', title: '', category: '우울/불안' });
 
+  // 가격 수정 변수
+  const [priceForm, setPriceForm] = useState({ chat: 40000, voice: 50000, video: 60000 });
+
   useEffect(() => {
     checkUser();
   }, []);
@@ -159,6 +162,19 @@ export default function MainPlatform() {
     }
   };
 
+  // 상담 금액 직접 수정 저장
+  const handleUpdatePrice = (e: React.FormEvent) => {
+    e.preventDefault();
+    setCounselors((prev) =>
+      prev.map((c) =>
+        c.id === 'c1' || c.name === user?.name
+          ? { ...c, chat_price: Number(priceForm.chat), voice_price: Number(priceForm.voice), video_price: Number(priceForm.video) }
+          : c
+      )
+    );
+    alert('상담 금액 설정이 정상적으로 변경되었습니다.');
+  };
+
   const netPayout = MOCK_SETTLEMENT.totalSales * (1 - 0.18);
 
   return (
@@ -187,7 +203,7 @@ export default function MainPlatform() {
           {user ? (
             <>
               {user.role === 'COUNSELOR' && (
-                <button onClick={() => setCurrentTab('MY_PAGE')} style={{ backgroundColor: '#E0F2FE', color: '#0369A1', border: 'none', padding: '8px 14px', borderRadius: '20px', cursor: 'pointer', fontWeight: 'bold', fontSize: '13px' }}>💼 내 정산 대시보드</button>
+                <button onClick={() => setCurrentTab('MY_PAGE')} style={{ backgroundColor: '#E0F2FE', color: '#0369A1', border: 'none', padding: '8px 14px', borderRadius: '20px', cursor: 'pointer', fontWeight: 'bold', fontSize: '13px' }}>💼 내 정산 및 금액 설정</button>
               )}
               {user.role === 'ADMIN' && (
                 <button onClick={() => setCurrentTab('ADMIN')} style={{ backgroundColor: '#FEF3C7', color: '#92400E', border: 'none', padding: '8px 14px', borderRadius: '20px', cursor: 'pointer', fontWeight: 'bold', fontSize: '13px' }}>👑 입점 심사 관리자</button>
@@ -299,37 +315,61 @@ export default function MainPlatform() {
           </div>
         )}
 
-        {/* 상담사 전용 정산 대시보드 */}
+        {/* 상담사 전용 대시보드 & 상담 금액 직접 변경 */}
         {currentTab === 'MY_PAGE' && user?.role === 'COUNSELOR' && (
-          <div style={{ backgroundColor: '#FFF', padding: '24px', borderRadius: '16px', border: '1px solid #E2E8F0' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', paddingBottom: '16px', borderBottom: '1px solid #E2E8F0' }}>
-              <div>
-                <h3 style={{ margin: 0, fontSize: '18px', fontWeight: 'bold' }}>💼 상담사 수익 및 정산 대시보드</h3>
-                <span style={{ fontSize: '12px', color: '#64748B' }}>실시간 입금 정산 현황</span>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            <div style={{ backgroundColor: '#FFF', padding: '24px', borderRadius: '16px', border: '1px solid #E2E8F0' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', paddingBottom: '16px', borderBottom: '1px solid #E2E8F0' }}>
+                <div>
+                  <h3 style={{ margin: 0, fontSize: '18px', fontWeight: 'bold' }}>💼 상담사 수익 및 정산 대시보드</h3>
+                  <span style={{ fontSize: '12px', color: '#64748B' }}>실시간 입금 정산 현황</span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <span style={{ fontSize: '12px', fontWeight: 'bold' }}>상태 설정:</span>
+                  <select value={myStatus} onChange={(e: any) => setMyStatus(e.target.value)} style={{ padding: '6px 10px', borderRadius: '8px', border: '1px solid #CBD5E1', fontSize: '12px', fontWeight: 'bold' }}>
+                    <option value="ONLINE">🟢 상담 가능</option>
+                    <option value="BUSY">🟡 상담 중</option>
+                    <option value="OFFLINE">🔴 부재 중</option>
+                  </select>
+                </div>
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <span style={{ fontSize: '12px', fontWeight: 'bold' }}>상태 설정:</span>
-                <select value={myStatus} onChange={(e: any) => setMyStatus(e.target.value)} style={{ padding: '6px 10px', borderRadius: '8px', border: '1px solid #CBD5E1', fontSize: '12px', fontWeight: 'bold' }}>
-                  <option value="ONLINE">🟢 상담 가능</option>
-                  <option value="BUSY">🟡 상담 중</option>
-                  <option value="OFFLINE">🔴 부재 중</option>
-                </select>
+
+              <div className="grid-dashboard">
+                <div style={{ backgroundColor: '#F8FAFC', padding: '16px', borderRadius: '12px', border: '1px solid #E2E8F0' }}>
+                  <span style={{ fontSize: '12px', color: '#64748B' }}>총 발생 매출액</span>
+                  <h4 style={{ margin: '8px 0 0 0', fontSize: '20px', color: '#0F172A', fontWeight: 'bold' }}>{MOCK_SETTLEMENT.totalSales.toLocaleString()} 원</h4>
+                </div>
+                <div style={{ backgroundColor: '#FEF2F2', padding: '16px', borderRadius: '12px', border: '1px solid #FECACA' }}>
+                  <span style={{ fontSize: '12px', color: '#991B1B' }}>수수료 (18%)</span>
+                  <h4 style={{ margin: '8px 0 0 0', fontSize: '20px', color: '#991B1B', fontWeight: 'bold' }}>-{(MOCK_SETTLEMENT.totalSales * 0.18).toLocaleString()} 원</h4>
+                </div>
+                <div style={{ backgroundColor: '#F0FDF4', padding: '16px', borderRadius: '12px', border: '1px solid #BBF7D0' }}>
+                  <span style={{ fontSize: '12px', color: '#166534', fontWeight: 'bold' }}>💳 이번 달 입금 예정액</span>
+                  <h4 style={{ margin: '8px 0 0 0', fontSize: '22px', color: '#15803D', fontWeight: 'bold' }}>{netPayout.toLocaleString()} 원</h4>
+                </div>
               </div>
             </div>
 
-            <div className="grid-dashboard">
-              <div style={{ backgroundColor: '#F8FAFC', padding: '16px', borderRadius: '12px', border: '1px solid #E2E8F0' }}>
-                <span style={{ fontSize: '12px', color: '#64748B' }}>총 발생 매출액</span>
-                <h4 style={{ margin: '8px 0 0 0', fontSize: '20px', color: '#0F172A', fontWeight: 'bold' }}>{MOCK_SETTLEMENT.totalSales.toLocaleString()} 원</h4>
-              </div>
-              <div style={{ backgroundColor: '#FEF2F2', padding: '16px', borderRadius: '12px', border: '1px solid #FECACA' }}>
-                <span style={{ fontSize: '12px', color: '#991B1B' }}>수수료 (18%)</span>
-                <h4 style={{ margin: '8px 0 0 0', fontSize: '20px', color: '#991B1B', fontWeight: 'bold' }}>-{(MOCK_SETTLEMENT.totalSales * 0.18).toLocaleString()} 원</h4>
-              </div>
-              <div style={{ backgroundColor: '#F0FDF4', padding: '16px', borderRadius: '12px', border: '1px solid #BBF7D0' }}>
-                <span style={{ fontSize: '12px', color: '#166534', fontWeight: 'bold' }}>💳 이번 달 입금 예정액</span>
-                <h4 style={{ margin: '8px 0 0 0', fontSize: '22px', color: '#15803D', fontWeight: 'bold' }}>{netPayout.toLocaleString()} 원</h4>
-              </div>
+            {/* 상담 금액 설정 UI */}
+            <div style={{ backgroundColor: '#FFF', padding: '24px', borderRadius: '16px', border: '1px solid #E2E8F0' }}>
+              <h3 style={{ fontSize: '18px', margin: '0 0 16px 0', fontWeight: 'bold', color: '#1B4332' }}>⚙️ 상담 서비스 금액 직접 수정</h3>
+              <form onSubmit={handleUpdatePrice} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px' }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: '12px', fontWeight: 'bold', marginBottom: '4px' }}>💬 채팅 상담 (원)</label>
+                  <input type="number" value={priceForm.chat} onChange={(e) => setPriceForm({ ...priceForm, chat: Number(e.target.value) })} style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #CBD5E1' }} />
+                </div>
+                <div>
+                  <label style={{ display: 'block', fontSize: '12px', fontWeight: 'bold', marginBottom: '4px' }}>📞 음성 상담 (원)</label>
+                  <input type="number" value={priceForm.voice} onChange={(e) => setPriceForm({ ...priceForm, voice: Number(e.target.value) })} style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #CBD5E1' }} />
+                </div>
+                <div>
+                  <label style={{ display: 'block', fontSize: '12px', fontWeight: 'bold', marginBottom: '4px' }}>📹 화상 상담 (원)</label>
+                  <input type="number" value={priceForm.video} onChange={(e) => setPriceForm({ ...priceForm, video: Number(e.target.value) })} style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #CBD5E1' }} />
+                </div>
+                <div style={{ gridColumn: '1 / -1', marginTop: '8px' }}>
+                  <button type="submit" style={{ backgroundColor: '#2D6A4F', color: '#FFF', border: 'none', padding: '12px', width: '100%', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}>변경 금액 메인 화면에 적용하기</button>
+                </div>
+              </form>
             </div>
           </div>
         )}
