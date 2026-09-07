@@ -2,14 +2,13 @@
 
 import React, { useState } from 'react';
 
-// 1. 데이터 (고화질 포토 & 일러스트 이미지 URL 결합)
 const INITIAL_COUNSELORS = [
   {
     id: 'c1',
     name: '김마음 상담사',
     title: '한국상담심리학회 1급 / 심리학 석사',
     tags: ['#우울/불안', '#자존감', '#따뜻한공감'],
-    status: 'ONLINE', // 🟢 ONLINE, 🟡 BUSY, 🔴 OFFLINE
+    status: 'ONLINE',
     chatPrice: 40000,
     voicePrice: 50000,
     videoPrice: 60000,
@@ -51,7 +50,6 @@ const PSYCH_TESTS = [
   }
 ];
 
-// 상담사 예시 정산 데이터
 const MOCK_COUNSELOR_SETTLEMENT = {
   counselorName: '김마음 상담사',
   period: '2026년 정산 내역',
@@ -128,7 +126,6 @@ export default function MainPlatform() {
   const pgFee = totalSales * MOCK_COUNSELOR_SETTLEMENT.pgFeeRate;
   const netPayout = totalSales - platformFee - pgFee;
 
-  // --- [화면 1: 1:1 비밀 상담실] ---
   if (activeConsultation) {
     const modeLabel = activeConsultation.mode === 'CHAT' ? '💬 채팅' : activeConsultation.mode === 'VOICE' ? '📞 음성통화' : '📹 화상';
     return (
@@ -186,10 +183,8 @@ export default function MainPlatform() {
     );
   }
 
-  // --- [화면 2: 메인 시각화 비주얼 웹사이트] ---
   return (
     <div style={{ backgroundColor: '#FAF9F6', minHeight: '100vh', fontFamily: 'sans-serif', color: '#1E293B' }}>
-      
       <style>{`
         .header-container { display: flex; justify-content: space-between; align-items: center; padding: 16px 32px; background-color: #FFFFFF; border-bottom: 1px solid #E2E8F0; }
         .hero-banner { 
@@ -202,8 +197,7 @@ export default function MainPlatform() {
           text-align: center; 
           border-radius: 0 0 20px 20px;
         }
-        .counselor-card { display: flex; background-color: #FFF; border-radius: 16px; padding: 20px; border: 1px solid #E2E8F0; gap: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); transition: transform 0.2s; }
-        .counselor-card:hover { transform: translateY(-2px); }
+        .counselor-card { display: flex; background-color: #FFF; border-radius: 16px; padding: 20px; border: 1px solid #E2E8F0; gap: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
         .grid-tests { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         .grid-dashboard { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 20px; }
         .btn-group { display: flex; gap: 8px; }
@@ -214,17 +208,14 @@ export default function MainPlatform() {
           .hero-banner { padding: 40px 16px; }
           .hero-banner h2 { font-size: 22px !important; }
           .counselor-card { flex-direction: column; align-items: center; text-align: center; }
-          .counselor-card-header { justify-content: center !important; }
           .grid-tests { grid-template-columns: 1fr; }
           .grid-dashboard { grid-template-columns: 1fr; }
-          .card-footer { flex-direction: column; align-items: center; gap: 12px; width: 100%; }
           .btn-group { width: 100%; justify-content: space-between; }
           .btn-group button { flex: 1; padding: 10px 4px !important; text-align: center; }
           .responsive-video-grid { grid-template-columns: 1fr; height: auto !important; }
         }
       `}</style>
 
-      {/* 헤더 */}
       <header className="header-container">
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }} onClick={() => setCurrentTab('COUNSELORS')}>
           <span style={{ fontSize: '24px' }}>🌿</span>
@@ -237,19 +228,15 @@ export default function MainPlatform() {
         </div>
       </header>
 
-      {/* 비주얼 이미지 배너 */}
       <section className="hero-banner">
-        <h2 style={{ fontSize: '28px', margin: '0 0 12px 0', fontWeight: 'bold', letterSpacing: '-0.5px' }}>지친 당신의 마음에 전하는 따뜻한 전문 상담</h2>
+        <h2 style={{ fontSize: '28px', margin: '0 0 12px 0', fontWeight: 'bold' }}>지친 당신의 마음에 전하는 따뜻한 전문 상담</h2>
         <p style={{ margin: '0 auto', color: '#E2E8F0', fontSize: '15px', maxWidth: '600px', lineHeight: '1.6' }}>
           보건복지부 / 학회 검증 전문가와 100% 비밀보장 1:1 상담.<br />
           앱 설치 없이 채팅 · 음성통화 · 화상 중 편한 방법으로 시작하세요.
         </p>
       </section>
 
-      {/* 메인 콘텐츠 영역 */}
       <main style={{ maxWidth: '960px', margin: '0 auto', padding: '24px 16px' }}>
-        
-        {/* 탭 버튼 */}
         <div style={{ display: 'flex', gap: '16px', marginBottom: '24px', borderBottom: '2px solid #E2E8F0', overflowX: 'auto' }}>
           <button onClick={() => setCurrentTab('COUNSELORS')} style={{ padding: '12px 18px', border: 'none', background: 'none', fontSize: '16px', fontWeight: 'bold', cursor: 'pointer', borderBottom: currentTab === 'COUNSELORS' ? '3px solid #2D6A4F' : 'none', color: currentTab === 'COUNSELORS' ? '#2D6A4F' : '#94A3B8', whiteSpace: 'nowrap' }}>
             전문 심리상담사 ({counselors.length})
@@ -259,36 +246,30 @@ export default function MainPlatform() {
           </button>
         </div>
 
-        {/* 탭 1: 전문 심리상담사 리스트 */}
         {currentTab === 'COUNSELORS' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
             {counselors.map((c) => (
               <div key={c.id} className="counselor-card">
-                {/* 고화질 프로필 이미지 */}
                 <div style={{ position: 'relative' }}>
                   <img src={c.image} alt={c.name} style={{ width: '90px', height: '90px', borderRadius: '50%', objectFit: 'cover', border: '3px solid #D8F3DC' }} />
                   <span style={{ position: 'absolute', bottom: 0, right: 0, backgroundColor: '#1B4332', color: '#FFF', fontSize: '10px', padding: '2px 6px', borderRadius: '10px' }}>🛡️ 검증</span>
                 </div>
                 
                 <div style={{ flex: 1, width: '100%' }}>
-                  <div className="counselor-card-header" style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
                     <h3 style={{ margin: 0, fontSize: '18px', fontWeight: 'bold' }}>{c.name}</h3>
                     {c.status === 'ONLINE' && <span style={{ backgroundColor: '#DCFCE7', color: '#166534', fontSize: '11px', fontWeight: 'bold', padding: '2px 8px', borderRadius: '12px' }}>🟢 지금 상담가능</span>}
                     {c.status === 'BUSY' && <span style={{ backgroundColor: '#FEF3C7', color: '#D97706', fontSize: '11px', fontWeight: 'bold', padding: '2px 8px', borderRadius: '12px' }}>🟡 상담 진행 중</span>}
                   </div>
-                  
                   <p style={{ margin: '0 0 8px 0', fontSize: '13px', color: '#64748B' }}>{c.title}</p>
-                  
                   <div style={{ display: 'flex', gap: '6px', marginBottom: '14px', flexWrap: 'wrap' }}>
                     {c.tags.map((tag, i) => (
                       <span key={i} style={{ backgroundColor: '#F0FDF4', color: '#166534', border: '1px solid #BBF7D0', padding: '2px 8px', borderRadius: '6px', fontSize: '12px' }}>{tag}</span>
                     ))}
                   </div>
                   
-                  <div className="card-footer" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid #F1F5F9', paddingTop: '12px' }}>
-                    <span style={{ fontSize: '13px', color: '#475569' }}>★ <b style={{ color: '#0F172A' }}>{c.rating}</b> ({c.reviewsCount}개 내돈내산 후기)</span>
-                    
-                    {/* 3가지 상담 선택 버튼 */}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid #F1F5F9', paddingTop: '12px' }}>
+                    <span style={{ fontSize: '13px', color: '#475569' }}>★ <b style={{ color: '#0F172A' }}>{c.rating}</b> ({c.reviewsCount}개 후기)</span>
                     <div className="btn-group">
                       <button onClick={() => handleStartConsultation(c, 'CHAT')} style={{ backgroundColor: '#2D6A4F', color: '#FFF', border: 'none', padding: '8px 12px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', fontSize: '12px' }}>💬 채팅 ({c.chatPrice / 10000}만)</button>
                       <button onClick={() => handleStartConsultation(c, 'VOICE')} style={{ backgroundColor: '#0284C7', color: '#FFF', border: 'none', padding: '8px 12px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', fontSize: '12px' }}>📞 음성 ({c.voicePrice / 10000}만)</button>
@@ -301,21 +282,18 @@ export default function MainPlatform() {
           </div>
         )}
 
-        {/* 탭 2: 비주얼 이미지 탑재 유료 심리검사 */}
         {currentTab === 'TESTS' && (
           <div className="grid-tests">
             {PSYCH_TESTS.map((t) => (
               <div key={t.id} style={{ backgroundColor: '#FFF', borderRadius: '16px', overflow: 'hidden', border: '1px solid #E2E8F0', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', boxShadow: '0 4px 12px rgba(0,0,0,0.03)' }}>
-                {/* 검사 대표 비주얼 이미지 */}
                 <div style={{ height: '140px', overflow: 'hidden', position: 'relative' }}>
                   <img src={t.image} alt={t.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                   <span style={{ position: 'absolute', top: '12px', left: '12px', backgroundColor: '#1E1B4B', color: '#EEF2FF', padding: '4px 10px', borderRadius: '6px', fontSize: '11px', fontWeight: 'bold' }}>{t.badge}</span>
                 </div>
-                
                 <div style={{ padding: '16px', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                   <div>
                     <h3 style={{ margin: '0 0 6px 0', fontSize: '16px', fontWeight: 'bold' }}>{t.title}</h3>
-                    <p style={{ margin: '0 0 16px 0', fontSize: '13px', color: '#64748B', lineHeight: '1.4' }}>{t.description}</p>
+                    <p style={{ margin: '0 0 16px 0', fontSize: '13px', color: '#64748B' }}>{t.description}</p>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid #F1F5F9', paddingTop: '12px' }}>
                     <span style={{ fontSize: '18px', fontWeight: 'bold', color: '#2D6A4F' }}>{t.price.toLocaleString()}원</span>
@@ -327,9 +305,8 @@ export default function MainPlatform() {
           </div>
         )}
 
-        {/* 탭 3: 상담사 수익 마이페이지 */}
         {currentTab === 'MY_PAGE' && (
-          <div style={{ backgroundColor: '#FFF', padding: '24px', borderRadius: '16px', border: '1px solid #E2E8F0', boxShadow: '0 4px 12px rgba(0,0,0,0.03)' }}>
+          <div style={{ backgroundColor: '#FFF', padding: '24px', borderRadius: '16px', border: '1px solid #E2E8F0' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', paddingBottom: '16px', borderBottom: '1px solid #E2E8F0' }}>
               <div>
                 <h3 style={{ margin: 0, fontSize: '18px', fontWeight: 'bold' }}>💼 {MOCK_COUNSELOR_SETTLEMENT.counselorName} 대시보드</h3>
@@ -392,9 +369,8 @@ export default function MainPlatform() {
           </div>
         )}
 
-        {/* 탭 4: 입점 신청 */}
         {currentTab === 'APPLY' && (
-          <div style={{ backgroundColor: '#FFF', padding: '24px', borderRadius: '16px', border: '1px solid #E2E8F0', boxShadow: '0 4px 12px rgba(0,0,0,0.03)' }}>
+          <div style={{ backgroundColor: '#FFF', padding: '24px', borderRadius: '16px', border: '1px solid #E2E8F0' }}>
             <h3 style={{ fontSize: '18px', margin: '0 0 12px 0', fontWeight: 'bold' }}>📝 심리상담사 입점 신청</h3>
             <form onSubmit={handleApplySubmit} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
               <input type="text" placeholder="성함" required value={applyForm.name} onChange={(e) => setApplyForm({ ...applyForm, name: e.target.value })} style={{ padding: '12px', borderRadius: '8px', border: '1px solid #CBD5E1', fontSize: '14px' }} />
@@ -406,9 +382,8 @@ export default function MainPlatform() {
           </div>
         )}
 
-        {/* 탭 5: 사장님 관리자 */}
         {currentTab === 'ADMIN' && (
-          <div style={{ backgroundColor: '#FFF', padding: '24px', borderRadius: '16px', border: '1px solid #E2E8F0', boxShadow: '0 4px 12px rgba(0,0,0,0.03)' }}>
+          <div style={{ backgroundColor: '#FFF', padding: '24px', borderRadius: '16px', border: '1px solid #E2E8F0' }}>
             <h3 style={{ fontSize: '18px', margin: '0 0 8px 0', fontWeight: 'bold' }}>👑 사장님(관리자) 심사 대시보드</h3>
             <p style={{ color: '#64748B', fontSize: '13px' }}>제출된 자격 증빙 서류를 검토 후 [승인]을 누르면 메인 화면에 즉시 정식 등록됩니다.</p>
             {pendingApplications.length === 0 ? (
